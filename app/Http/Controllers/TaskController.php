@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -13,7 +14,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        // Retrieve all tasks from the database
+        $tasks = Task::all();
+
+        // Return a view and pass the tasks data
+        return view('tasks.index', compact('tasks'));
     }
 
     /**
@@ -21,7 +26,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        // Return a view for creating a new task
+        return view('tasks.create');
     }
 
     /**
@@ -29,7 +35,11 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        // Create a new task using the validated data from the request
+        Task::create($request->validated());
+
+        // Redirect to the tasks index with a success message
+        return redirect()->route('index')->with('success', 'Task created successfully.');
     }
 
     /**
@@ -37,7 +47,8 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        // Return a view to show the specific task details
+        return view('tasks.show', compact('task'));
     }
 
     /**
@@ -45,7 +56,8 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        // Return a view to edit the specific task
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -53,7 +65,11 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        // Update the task using the validated data from the request
+        $task->update($request->validated());
+
+        // Redirect to the tasks index with a success message
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
 
     /**
@@ -61,6 +77,10 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        // Delete the specified task
+        $task->delete();
+
+        // Redirect to the tasks index with a success message
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
 }

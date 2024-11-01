@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//Route::get('/', [Controller::class, "index"])->name("index");
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', [Controller::class, "index"])->name("index");
+    Route::resource("tasks", TaskController::class);
+
 });
+
+
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login-post',[AuthController::class,'loginPost'])->name('login-post');
+Route::get('/logout',[AuthController::class,'logout'])->name('logout');
